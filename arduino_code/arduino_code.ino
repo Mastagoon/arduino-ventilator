@@ -10,9 +10,9 @@
 #include <Servo.h>
 /* pins */ 
 const int servoPin = 13;
-const int speedIncBtn = 12; // speed value is controlled by chaning the delay inside the servo-write loops
+const int speedIncBtn = 12; // speed value is controlled by changing the delay inside the servo-write loops
 const int speedDecBtn = 11;
-const int volIncBtn = 10; // volume value is controlled by chaning the target angle
+const int volIncBtn = 10; // volume value is controlled by changing the target angle
 const int volDecBtn = 9;
 Servo servo1; // create servo object
 
