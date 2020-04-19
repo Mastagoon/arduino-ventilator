@@ -46,12 +46,20 @@ int getDelay(int speedVal,bool inhale) { // this function takes the speed value 
 void checkButtons() {
   int speedIncBtnVal = digitalRead(speedIncBtn); // reads if the speed increment button is pressed
   speedIncBtnVal ? currentSpeed += speedInc : currentSpeed = currentSpeed; // if speedIncBtnVal is high, increase speed, else do nothing
+  Serial.print("Speed increased, current speed value is ");
+  Serial.println(currentSpeed);
   int speedDecBtnVal = digitalRead(speedDecBtn); // the same code is repeated for all 4 buttons
   speedDecBtnVal ? currentSpeed -= speedDec : currentSpeed = currentSpeed;
+  Serial.print("Speed decreased, current speed value is ");
+  Serial.println(currentSpeed);
   int AngleIncBtnVal = digitalRead(volIncBtn);
   AngleIncBtnVal ? targetAngle += angleInc : targetAngle = targetAngle;
+  Serial.print("Target angle increased, current angle value is ");
+  Serial.println(targetAngle);
   int AngleDecBtnVal = digitalRead(volDecBtn);
   AngleDecBtnVal ? targetAngle -= angleDec : targetAngle = targetAngle;
+  Serial.print("Target angle decreased, current angle value is ");
+  Serial.println(targetAngle);
 }
 
 bool safetyCheck() { // checks for and corrects conditions that could cause harm or malfunction.
