@@ -45,21 +45,29 @@ int getDelay(int speedVal,bool inhale) { // this function takes the speed value 
 
 void checkButtons() {
   int speedIncBtnVal = digitalRead(speedIncBtn); // reads if the speed increment button is pressed
-  speedIncBtnVal ? currentSpeed += speedInc : currentSpeed = currentSpeed; // if speedIncBtnVal is high, increase speed, else do nothing
-  Serial.print("Speed increased, current speed value is ");
-  Serial.println(currentSpeed);
+  if(speedIncBtnVal) { // if speedIncBtnVal is high, increase speed, else do nothing
+    currentSpeed += speedInc;
+    Serial.print("Speed increased, current speed value is ");
+    Serial.println(currentSpeed);
+  }
   int speedDecBtnVal = digitalRead(speedDecBtn); // the same code is repeated for all 4 buttons
-  speedDecBtnVal ? currentSpeed -= speedDec : currentSpeed = currentSpeed;
-  Serial.print("Speed decreased, current speed value is ");
-  Serial.println(currentSpeed);
+  if(speedDecBtnVal) {
+    currentSpeed -= speedDec;
+    Serial.print("Speed decreased, current speed value is ");
+    Serial.println(currentSpeed);
+  }  
   int AngleIncBtnVal = digitalRead(volIncBtn);
-  AngleIncBtnVal ? targetAngle += angleInc : targetAngle = targetAngle;
-  Serial.print("Target angle increased, current angle value is ");
-  Serial.println(targetAngle);
+  if(AngleIncBtnVal) {
+    targetAngle += angleInc;
+    Serial.print("Target angle increased, current angle value is ");
+    Serial.println(targetAngle);
+  }  
   int AngleDecBtnVal = digitalRead(volDecBtn);
-  AngleDecBtnVal ? targetAngle -= angleDec : targetAngle = targetAngle;
-  Serial.print("Target angle decreased, current angle value is ");
-  Serial.println(targetAngle);
+  if(AngleDecBtnVal) {
+    targetAngle -= angleDec;
+    Serial.print("Target angle decreased, current angle value is ");
+    Serial.println(targetAngle);
+  }  
 }
 
 bool safetyCheck() { // checks for and corrects conditions that could cause harm or malfunction.
@@ -104,11 +112,13 @@ void loop() {
     Serial.print("current speed : ");
     Serial.println(currentSpeed);
     for(int i = minAngle; i <= targetAngle; i++) { // move the servo from 0 to the target angle
+      checkButtons(); // checks if the buttons are pressed during the servo rotation
       servo1.write(i);
       delay(getDelay(currentSpeed, true)); // get the needed delay to keep the process at the desired current speed
     }
     delay(pauseDelay); // delay between inhaling and exhaling
     for(int i = targetAngle; i >= minAngle; i--) { // move the servo from the current target angle to 0
+      checkButtons();
       servo1.write(i);
       delay(getDelay(currentSpeed, false)); // get the needed delay for the return trip speed
     }
