@@ -13,6 +13,7 @@
 #include <sfm3000wedo.h>
 /* pins */ 
 const int servoPin = 13;
+const int pressureSensorPin = A0;
 const int speedIncBtn = 21; // speed value is controlled by changing the delay inside the servo-write loops
 const int speedDecBtn = 20;
 const int volIncBtn = 19; // volume value is controlled by changing the target angle
@@ -20,9 +21,9 @@ const int volDecBtn = 18;
 
 //objects
 Servo servo1; // create servo object
-SFM3000wedo measflow(64); //sensor flow object
+SFM3000wedo measflow(64); //sensor flow object, this device uses I2C communication (port 3&4)
 
-//sensors stuff
+//misc
 int offset = 32000; // Offset for the flow sensor #TODO: revision this
 float scale = 140.0; // Scale factor for Air and N2 is 140.0, O2 is 142.8 #TODO: revision this
 
@@ -105,6 +106,22 @@ void decreaseVolume() {
     Serial.println(targetAngle);
 }
 
+float readSensors(){
+    // reading flow
+    unsigned int flowSensorResult = measflow.getvalue(); // get the reading from the flow sensor
+    float flow = ((float)result - offset) / scale; // some math magic to get the actual flow value #TODO: test and check this value (expected: slm)
+    // a calculation to get the tidal volume value from the flow goes here. #TODO revisit this 
+    Serial.print("The flow value is ");
+    Serial.print(flow);
+    Serial.print(" slm");
+    // reading pressure value
+    unsigned int = prsesureSensorResult = analogRead(pressureSensorPin);
+    // a calculation to get the Pa value from the analog voltage value goes here #TODO
+    /*Serial.print();
+    Serial.print();
+    Serial.print();*/
+}
+
 void setup() {
   pinMode(speedIncBtn, INPUT);
   pinMode(speedDecBtn, INPUT);
@@ -125,11 +142,7 @@ void setup() {
 
 void loop() {
   if(safetyCheck()) { // if the device passes the safety check, start working immediately
-    unsigned int flowSensorResult = measflow.getvalue(); // get the reading from the flow sensor
-    float flow = ((float)result - offset) / scale; // some math magic to get the actual flow value
-    // a calculation to get the tidal volume value from the flow goes here.
-    Serial.print("The flow value is ");
-    Serial.println(flow);
+    readSensors();
     Serial.print("target angle : ");
     Serial.println(targetAngle);
     Serial.print("current speed : ");
